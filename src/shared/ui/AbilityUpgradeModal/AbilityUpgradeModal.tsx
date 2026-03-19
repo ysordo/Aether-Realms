@@ -32,7 +32,7 @@ export function AbilityUpgradeModal({
   currentLevel,
   onUpgrade,
 }: AbilityUpgradeModalProps) {
-  const { upgradeAbility, getAbilityLevel } = useAbilityStore();
+  const { upgradeAbility } = useAbilityStore();
   const [isUpgrading, setIsUpgrading] = useState(false);
 
   const handleUpgrade = () => {
