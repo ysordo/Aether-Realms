@@ -1,4 +1,5 @@
 import { Card } from "@shared/ui/Card";
+import { getAssetUrl } from "@shared/utils/getAssetUrl";
 import { Icon } from "@shared/ui/Icon";
 import { LazyImage } from "@shared/ui/LazyImage";
 import { CheckCircle } from "lucide-react";
@@ -56,7 +57,7 @@ export function GrandBoardSection() {
           <div className="absolute -inset-2 bg-linear-to-r from-primary to-gold rounded-xl opacity-20 blur-xl group-hover:opacity-40 transition duration-1000" />
           <div className="relative h-fit rounded-xl border border-gold shadow-2xl overflow-hidden">
             <LazyImage
-              src="/assets/plaza_bazar_flotante.jpg"
+              src={getAssetUrl("/assets/plaza_bazar_flotante.jpg")}
               alt="The Grand Board"
               aspectRatio="aspect-[1/1]"
             />
@@ -126,7 +127,7 @@ export function GrandBoardSection() {
           <div className="absolute -inset-2 bg-linear-to-r from-accent-gold to-primary rounded-xl opacity-20 blur-xl group-hover:opacity-40 transition duration-1000" />
           <div className="relative rounded-xl gold-border shadow-2xl overflow-hidden">
             <LazyImage
-              src="/assets/17_cofre_tesoro.jpg"
+              src={getAssetUrl("/assets/17_cofre_tesoro.jpg")}
               alt="The Golden Path"
               aspectRatio="aspect-[4/3]"
             />

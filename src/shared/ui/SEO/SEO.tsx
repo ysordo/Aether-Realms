@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async'
+import { getAssetUrl } from '@shared/utils/getAssetUrl'
 
 export interface SEOProps {
   title: string
@@ -23,7 +24,7 @@ export function SEO({
   type = 'website',
 }: SEOProps) {
   const fullUrl = canonicalUrl || `${SITE_URL}${path}`
-  const fullImage = image.startsWith('http') ? image : `${SITE_URL}${image}`
+  const fullImage = image.startsWith('http') ? image : `${SITE_URL}${getAssetUrl(image)}`
 
   return (
     <Helmet>
@@ -69,7 +70,7 @@ export function SEO({
             name: 'Aether Realms',
             logo: {
               '@type': 'ImageObject',
-              url: `${SITE_URL}/assets/logo.png`,
+              url: `${SITE_URL}${getAssetUrl('/assets/logo.png')}`,
             },
           },
         })}

@@ -1,4 +1,5 @@
 import { type HTMLAttributes } from 'react'
+import { getAssetUrl } from '@shared/utils/getAssetUrl'
 
 export interface IconProps extends HTMLAttributes<HTMLImageElement> {
   name: string
@@ -44,8 +45,8 @@ export function Icon({
   className = '',
   ...props
 }: IconProps) {
-  const iconPath = iconMap[name] || '/icons/mystery.png'
-  
+  const iconPath = getAssetUrl(iconMap[name] || '/icons/mystery.png')
+
   return (
     <img
       src={iconPath}

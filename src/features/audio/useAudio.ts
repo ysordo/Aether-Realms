@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Howl, Howler } from 'howler'
+import { getAssetUrl } from '@shared/utils/getAssetUrl'
 
 interface AudioConfig {
   bgmVolume: number
@@ -43,14 +44,14 @@ class AudioManager {
   private init() {
     // Initialize background music with seamless loop
     this.bgm = new Howl({
-      src: ['/audio/bgm-loop.mp3'],
+      src: [getAssetUrl('/audio/bgm-loop.mp3')],
       loop: true,
       volume: 0,
       html5: false,
       preload: true,
       autoplay: false,
       onload: () => {
-        
+
         if (!this.config.muted) {
           this.bgm?.volume(this.config.bgmVolume)
         }
@@ -62,25 +63,25 @@ class AudioManager {
 
     // Initialize sound effects
     this.sfx.buttonClick = new Howl({
-      src: ['/audio/sfx-click.mp3'],
+      src: [getAssetUrl('/audio/sfx-click.mp3')],
       volume: this.config.muted ? 0 : this.config.sfxVolume,
       preload: true,
     })
 
     this.sfx.abilityUse = new Howl({
-      src: ['/audio/sfx-ability.mp3'],
+      src: [getAssetUrl('/audio/sfx-ability.mp3')],
       volume: this.config.muted ? 0 : this.config.sfxVolume,
       preload: true,
     })
 
     this.sfx.levelUp = new Howl({
-      src: ['/audio/sfx-levelup.mp3'],
+      src: [getAssetUrl('/audio/sfx-levelup.mp3')],
       volume: this.config.muted ? 0 : this.config.sfxVolume,
       preload: true,
     })
 
     this.sfx.combat = new Howl({
-      src: ['/audio/sfx-combat.mp3'],
+      src: [getAssetUrl('/audio/sfx-combat.mp3')],
       volume: this.config.muted ? 0 : this.config.sfxVolume,
       preload: true,
     })
@@ -94,7 +95,7 @@ class AudioManager {
       // Fade in from 0 to target volume
       this.bgm.volume(0)
       this.bgm.play()
-      
+
       if (!this.config.muted) {
         // Smooth fade in over 2 seconds
         let currentVolume = 0
@@ -102,7 +103,7 @@ class AudioManager {
         const fadeDuration = 2000
         const stepTime = 50
         const volumeStep = (targetVolume - currentVolume) / (fadeDuration / stepTime)
-        
+
         const fadeInterval = setInterval(() => {
           currentVolume += volumeStep
           if (currentVolume >= targetVolume) {
@@ -117,7 +118,7 @@ class AudioManager {
 
   stopBGM() {
     if (!this.bgm) return
-    
+
     const currentVolume = this.bgm.volume()
     this.bgm.fade(currentVolume, 0, 1000)
     setTimeout(() => {

@@ -5,8 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: '/Aether-Realms/',
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/Aether-Realms/' : '/',
   plugins: [
     react(),
     tailwindcss(),
@@ -21,8 +21,8 @@ export default defineConfig({
         background_color: '#1a0b14',
         display: 'standalone',
         orientation: 'portrait',
-        scope: '/',
-        start_url: '/',
+        scope: '/Aether-Realms/',
+        start_url: '/Aether-Realms/',
         icons: [
           {
             src: '/icons/icon-192x192.png',
@@ -122,4 +122,4 @@ export default defineConfig({
   esbuild: {
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
   },
-})
+}))
