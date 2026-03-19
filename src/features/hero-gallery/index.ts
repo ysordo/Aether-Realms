@@ -1,0 +1,1 @@
+export { HeroGallerySection } from './HeroGallerySection'

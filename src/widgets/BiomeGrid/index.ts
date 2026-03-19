@@ -1,0 +1,1 @@
+export { BiomeGrid } from './BiomeGrid'

@@ -1,0 +1,1899 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Aether Realms | VR Tabletop Strategy</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#ec5b13",
+              "background-light": "#f8f6f6",
+              "background-dark": "#1a0b14",
+              "accent-gold": "#d4af37",
+              "accent-purple": "#4b2038",
+            },
+            fontFamily: {
+              display: ["Public Sans", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .curve-separator {
+        clip-path: ellipse(80% 100% at 50% 0%);
+      }
+      .text-glow {
+        text-shadow: 0 0 15px rgba(236, 91, 19, 0.4);
+      }
+      .gold-border {
+        border: 1px solid rgba(212, 175, 55, 0.3);
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+    </style>
+    <style>
+      .skill-tooltip {
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(26, 11, 20, 0.95);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(236, 91, 19, 0.3);
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        width: 160px;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 100;
+        box-shadow:
+          0 0 20px rgba(0, 0, 0, 0.5),
+          0 0 10px rgba(236, 91, 19, 0.2);
+      }
+      .group\/skill:hover .skill-tooltip {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(-5px);
+      }
+      .skill-tooltip::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: rgba(26, 11, 20, 0.95) transparent transparent transparent;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-base-100 font-display text-slate-900 dark:text-slate-100"
+  >
+    <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+      <!-- Header / Hero Section -->
+      <div class="relative w-full">
+        <header
+          class="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 lg:px-40 py-6 border-b border-white/10 backdrop-blur-sm bg-black/20"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-3xl"
+              >deployed_code</span
+            >
+            <h2
+              class="text-white text-2xl font-black leading-tight tracking-tighter uppercase italic"
+            >
+              Aether Realms
+            </h2>
+          </div>
+          <div class="hidden md:flex flex-1 justify-end gap-10 items-center">
+            <nav class="flex items-center gap-8">
+              <a
+                class="text-white/80 hover:text-primary text-sm font-bold uppercase tracking-widest transition-colors"
+                href="#"
+                >World</a
+              >
+              <a
+                class="text-white/80 hover:text-primary text-sm font-bold uppercase tracking-widest transition-colors"
+                href="#"
+                >Characters</a
+              >
+              <a
+                class="text-white/80 hover:text-primary text-sm font-bold uppercase tracking-widest transition-colors"
+                href="#"
+                >Roadmap</a
+              >
+            </nav>
+            <button
+              class="bg-primary hover:bg-primary/90 text-white px-8 py-2.5 rounded-full text-sm font-black uppercase tracking-widest transition-all transform hover:scale-105 shadow-lg shadow-primary/20"
+            >
+              Play Now
+            </button>
+          </div>
+        </header>
+        <div
+          class="relative flex min-h-screen items-center justify-center pt-20 px-4 overflow-hidden"
+        >
+          <!-- Hero Background Image -->
+          <div class="absolute inset-0 z-0">
+            <div
+              class="absolute inset-0 bg-gradient-to-b from-background-dark/30 via-background-dark/70 to-background-dark z-10"
+            ></div>
+            <img
+              class="w-full h-full object-cover"
+              data-alt="Cinematic floating islands in a magical purple sky"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd9qJgSa-fwn0bhK5igyA7BAmkTnoRKqapb3CildVahzP98L_EAw5696LPrKrQa_-pkCTRyVZov6GNCkk16dxiQAL3xyVhm9OYMrezg5YUSPjhaMa3dzlvK5aD09Bnpx9a3fG7CB9rgUjKSZFCWZXTxHx2mBUGeg-NbPNtWITP1Om5I8Seomqa7UC_jy7V9pUSHS4lKRVCr3i7pcb7Plk76-I5frn4JRBMWPrVlZ6hFHHy8GX8decppmuyVE-GbVhG-Jm9xFLr5udN"
+            />
+          </div>
+          <div class="relative z-20 text-center max-w-4xl mx-auto">
+            <div
+              class="mb-6 inline-flex items-center gap-2 px-4 py-1 rounded-full border border-primary/50 bg-primary/10 backdrop-blur-md"
+            >
+              <span class="material-symbols-outlined text-primary text-sm"
+                >vrpano</span
+              >
+              <span
+                class="text-primary text-xs font-black uppercase tracking-[0.2em]"
+                >Now Available in VR</span
+              >
+            </div>
+            <h1
+              class="text-white text-5xl md:text-8xl font-black leading-none tracking-tighter mb-6 uppercase italic text-glow"
+            >
+              <span
+                class="block text-3xl md:text-5xl font-extrabold tracking-widest mb-2 opacity-90"
+                >STEP INTO THE</span
+              ><span
+                class="block text-6xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-primary via-orange-400 to-accent-gold drop-shadow-[0_0_25px_rgba(236,91,19,0.6)]"
+                >AETHER REALMS</span
+              >
+            </h1>
+            <p
+              class="text-slate-300 text-lg md:text-xl font-medium max-w-2xl mx-auto mb-10 leading-relaxed"
+            >
+              Experience the ultimate VR tabletop strategy game where magic
+              meets legend. Command the board from above in immersive arcane
+              environments.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-8">
+              <button
+                class="bg-primary text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-primary/90 transition-all text-lg shadow-2xl shadow-primary/40"
+              >
+                Enter the Realm
+              </button>
+              <button
+                class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-5 rounded-xl font-black uppercase tracking-widest hover:bg-white/20 transition-all text-lg"
+              >
+                Watch Trailer
+              </button>
+            </div>
+          </div>
+          <!-- Scroll Indicator -->
+          <div
+            class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 animate-bounce"
+          >
+            <span class="material-symbols-outlined text-white/50 text-4xl"
+              >expand_more</span
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Section Separator -->
+      <div
+        class="h-24 bg-base-100 curve-separator relative z-30"
+        style="clip-path: ellipse(100% 100% at 50% 0%)"
+      ></div>
+      <!-- Epic Strategy Section -->
+      <section class="bg-base-100 py-24 px-6 lg:px-40">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="order-2 lg:order-1">
+            <div class="relative group">
+              <div
+                class="absolute -inset-2 bg-gradient-to-r from-primary to-accent-gold rounded-xl opacity-20 blur-xl group-hover:opacity-40 transition duration-1000"
+              ></div>
+              <img
+                class="relative rounded-xl gold-border shadow-2xl"
+                data-alt="Intricate glowing tabletop strategy board tiles"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_cTfNCrE1r88fIOBVi8gs3_oqz--OqCB5083sWLCWIX5ZsPK34_h04b-dlJZNzofs4-6kJUrYG5PEE045Rb9gO7n-ddQ6xlngffjdPe5pzCoSAFdNewXmeXbeHnhZyNUTkog5Sfct9E-lcQGw_qxrcfUYZe3VUoYGtEvcRdc6tqfvnp10oTZVDUMj7Z5uEDYplSzBqvqM6u48rgULqWtN7sO0cCaUYhuXuY8vpC1K4Aln5duG0ILjTrveR9IfygzAWQVRE1bR0Mha"
+              />
+            </div>
+          </div>
+          <div class="order-1 lg:order-2 space-y-6">
+            <div class="flex items-center gap-2">
+              <div class="h-1 w-12 bg-primary"></div>
+              <span
+                class="text-primary font-black uppercase tracking-[0.3em] text-sm"
+                >Arcane Mastery</span
+              >
+            </div>
+            <h2
+              class="text-4xl md:text-6xl font-black text-white leading-tight uppercase italic"
+            >
+              Epic Strategy
+            </h2>
+            <p class="text-slate-400 text-lg leading-relaxed">
+              Master the board with tactical precision and arcane power. Every
+              tile holds a secret, every move defines your legacy in the
+              shattered world of Aether.
+            </p>
+            <ul class="space-y-4">
+              <li class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-accent-gold"
+                  >check_circle</span
+                >
+                <span class="text-slate-300"
+                  >Dynamic environment tiles that react to your magic.</span
+                >
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-accent-gold"
+                  >check_circle</span
+                >
+                <span class="text-slate-300"
+                  >Turn-based combat with real-time VR interactions.</span
+                >
+              </li>
+              <li class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-accent-gold"
+                  >check_circle</span
+                >
+                <span class="text-slate-300"
+                  >Global leaderboards for the ultimate tacticians.</span
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <!-- Legendary Characters Section -->
+      <section class="bg-base-100 py-24 px-6 lg:px-40 relative overflow-hidden">
+        <div
+          class="absolute top-0 right-0 w-96 h-96 bg-primary/10 blur-[120px] rounded-full"
+        ></div>
+        <div class="text-center mb-16 space-y-6">
+          <div class="space-y-4">
+            <h2
+              class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter"
+            >
+              Legendary Characters
+            </h2>
+            <div
+              class="h-1.5 w-32 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
+            ></div>
+            <p class="text-slate-400 max-w-xl mx-auto">
+              Choose your champion and wield their unique powers to dominate the
+              battlefield.
+            </p>
+          </div>
+          <!-- Filter Bar -->
+          <div class="flex flex-wrap justify-center gap-4 mt-8">
+            <button
+              class="px-6 py-2 rounded-full bg-primary text-white text-xs font-black uppercase tracking-widest border border-primary transition-all"
+            >
+              All
+            </button>
+            <button
+              class="px-6 py-2 rounded-full bg-white/5 text-slate-400 text-xs font-black uppercase tracking-widest border border-white/10 hover:border-primary/50 transition-all"
+            >
+              Magic
+            </button>
+            <button
+              class="px-6 py-2 rounded-full bg-white/5 text-slate-400 text-xs font-black uppercase tracking-widest border border-white/10 hover:border-primary/50 transition-all"
+            >
+              Melee
+            </button>
+            <button
+              class="px-6 py-2 rounded-full bg-white/5 text-slate-400 text-xs font-black uppercase tracking-widest border border-white/10 hover:border-primary/50 transition-all"
+            >
+              Support
+            </button>
+          </div>
+          <!-- Toggle Button -->
+          <button
+            class="mt-8 inline-flex items-center gap-2 text-primary font-black uppercase tracking-widest text-sm hover:gap-4 transition-all"
+          >
+            <span>View All Heroes</span>
+            <span class="material-symbols-outlined">expand_more</span>
+          </button>
+        </div>
+        <!-- Character Grid -->
+        <div class="grid gap-8 max-w-7xl mx-auto sm:grid-cols-2 lg:grid-cols-4">
+          <!-- Blue Mage -->
+          <div
+            class="group relative overflow-hidden rounded-2xl gold-border transform transition duration-500 hover:scale-105 hover:shadow-[0_0_30px_rgba(236,91,19,0.3)] animate-fade-in-up"
+          >
+            <div class="aspect-[3/4] overflow-hidden">
+              <img
+                alt="The Blue Mage"
+                class="w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbVXsMn1c68_FNP1ICkpxCxst1SjqvJUHWktXcaf8cF_PnBA9iI49T46KqhVyT0k_Z7syyVT7FVHgfska_e_L3p7UZz2dG2jeggv-Bl-yj3WWm5atDLkk20pPKfkJTh2uB3oBx1LRumBVK3eftHtWY2LA2zTPjpwcFteiWlx-Dd-S0XIGdvGTCh-Oj4DjlGYjzaNw1A5s7bK0-uQug951J1_o-RUyqtaNjGHl8gkvDRtIyjuv53WGc4-AUJt4rmFBOoDvKLqm9RFpn"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"
+            ></div>
+            <div class="absolute bottom-0 left-0 p-6 space-y-2">
+              <span
+                class="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-blue-500/30"
+                >Spellcaster</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                The Blue Mage
+              </h3>
+              <div class="flex gap-4 mt-3 mb-1">
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-blue-400 text-lg drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]"
+                    >history</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-blue-400/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Chronos</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Chronos Blast
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Deals magic damage and slows the target's next turn.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Divine Smite
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A powerful melee strike that deals extra damage to undead.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Shadow Strike
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Attack from stealth for a guaranteed critical hit.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Floral Heal
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A potent heal that restores a large amount of HP.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-blue-400 text-lg drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]"
+                    >shield</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-blue-400/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Shield</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Aether Shield
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Creates a protective barrier that absorbs incoming spells.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Bastion of Light
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Heals nearby allies and grants them a defense boost.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Toxic Blade
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Applies a poison effect that deals damage over time.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Gale Winds
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Pushes back all enemies in a wide radius.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-blue-400 text-lg drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]"
+                    >rocket_launch</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-blue-400/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Warp</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Space Warp
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Teleport to any adjacent tile on the board.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Iron Resolve
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Becomes immune to crowd control effects for 2 turns.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Smoke Screen
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Vanishes from sight, making the hero untargetable.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Nature's Wrath
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Summons roots to entangle and stun all nearby foes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="text-slate-300 text-xs">
+                Master of the Aether. Controls the flow of time and space.
+              </p>
+            </div>
+          </div>
+          <!-- Golden Knight -->
+          <div
+            class="group relative overflow-hidden rounded-2xl gold-border transform transition duration-500 hover:scale-105 hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] animate-fade-in-up"
+            style="animation-delay: 100ms"
+          >
+            <div class="aspect-[3/4] overflow-hidden">
+              <img
+                alt="The Golden Knight"
+                class="w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhRZS_CXRPW8dsZ7faUcw9mixNefxK913htt9En-deYia3Qh4NGAUDuyO1jDUu1ULpy-49As__c9gn5YSA9L9x9f7Rdmr-dLdsceBVEnkhtH1yp3dF5ZI9Nqxlhb0xwcpQ9PI0KUnkoFP9tcNfDLJ1qGTM_52LcyJ8hE2rodd6x1glzcQxWhEgSCIGxvdfniawq3ppmSwIwb-q2xD_OWy_19yISpfn015bDEDDgmzCi_homUdE1aRpvYsuE679s-ju80TIIKaiNcJ2"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"
+            ></div>
+            <div class="absolute bottom-0 left-0 p-6 space-y-2">
+              <span
+                class="bg-accent-gold/20 text-accent-gold px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-accent-gold/30"
+                >Defender</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                The Golden Knight
+              </h3>
+              <div class="flex gap-4 mt-3 mb-1">
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-lg drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                    >auto_awesome</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-accent-gold/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Smite</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Chronos Blast
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Deals magic damage and slows the target's next turn.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Divine Smite
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A powerful melee strike that deals extra damage to undead.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Shadow Strike
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Attack from stealth for a guaranteed critical hit.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Floral Heal
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A potent heal that restores a large amount of HP.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-lg drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                    >fort</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-accent-gold/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Bastion</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Aether Shield
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Creates a protective barrier that absorbs incoming spells.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Bastion of Light
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Heals nearby allies and grants them a defense boost.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Toxic Blade
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Applies a poison effect that deals damage over time.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Gale Winds
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Pushes back all enemies in a wide radius.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-accent-gold text-lg drop-shadow-[0_0_8px_rgba(212,175,55,0.8)]"
+                    >fitness_center</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-accent-gold/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Resolve</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Space Warp
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Teleport to any adjacent tile on the board.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Iron Resolve
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Becomes immune to crowd control effects for 2 turns.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Smoke Screen
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Vanishes from sight, making the hero untargetable.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Nature's Wrath
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Summons roots to entangle and stun all nearby foes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="text-slate-300 text-xs">
+                Protector of the Realm. An immovable force with devastating
+                power.
+              </p>
+            </div>
+          </div>
+          <!-- Assassin -->
+          <div
+            class="group relative overflow-hidden rounded-2xl gold-border transform transition duration-500 hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] animate-fade-in-up"
+            style="animation-delay: 200ms"
+          >
+            <div class="aspect-[3/4] overflow-hidden">
+              <img
+                alt="The Assassin"
+                class="w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgVRTd92yvt1x8OFI1_oJDvBFLQEXZzPCepEe99ig5MKIQtjUspknosvzedTUn3EJDbB3jCuPeEaK2vKwXhCYihZZpN6prlqiapczWeff-F1lG13cca89YTcmlXa2FtXTFjTJEIwstRF2X7W4F-90GV1tpuqhryDU5uwa2QBrJpHLpVqn7hA_zATq2AZrjONkeY4D-nZhUq3FdsgmEmjGRBtfKVz9mzpmltlPmCx-wRgfjzxVcPVA1uNktkTW3Lsir4BP9SD-obdYa"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"
+            ></div>
+            <div class="absolute bottom-0 left-0 p-6 space-y-2">
+              <span
+                class="bg-slate-700/40 text-slate-300 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-slate-500/30"
+                >Rogue</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                The Assassin
+              </h3>
+              <div class="flex gap-4 mt-3 mb-1">
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-slate-300 text-lg drop-shadow-[0_0_8px_rgba(203,213,225,0.8)]"
+                    >visibility_off</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-slate-400 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Strike</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Chronos Blast
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Deals magic damage and slows the target's next turn.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Divine Smite
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A powerful melee strike that deals extra damage to undead.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Shadow Strike
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Attack from stealth for a guaranteed critical hit.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Floral Heal
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A potent heal that restores a large amount of HP.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-slate-300 text-lg drop-shadow-[0_0_8px_rgba(203,213,225,0.8)]"
+                    >colorize</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-slate-400 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Toxic</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Aether Shield
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Creates a protective barrier that absorbs incoming spells.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Bastion of Light
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Heals nearby allies and grants them a defense boost.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Toxic Blade
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Applies a poison effect that deals damage over time.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Gale Winds
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Pushes back all enemies in a wide radius.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-slate-300 text-lg drop-shadow-[0_0_8px_rgba(203,213,225,0.8)]"
+                    >cloud</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-slate-400 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Smoke</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Space Warp
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Teleport to any adjacent tile on the board.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Iron Resolve
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Becomes immune to crowd control effects for 2 turns.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Smoke Screen
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Vanishes from sight, making the hero untargetable.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Nature's Wrath
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Summons roots to entangle and stun all nearby foes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="text-slate-300 text-xs">
+                Master of shadows. Strikes from the darkness with lethal speed.
+              </p>
+            </div>
+          </div>
+          <!-- Fairy Queen (New) -->
+          <div
+            class="group relative overflow-hidden rounded-2xl gold-border transform transition duration-500 hover:scale-105 hover:shadow-[0_0_30px_rgba(74,222,128,0.3)] animate-fade-in-up"
+            style="animation-delay: 300ms"
+          >
+            <div class="aspect-[3/4] overflow-hidden">
+              <img
+                alt="The Fairy Queen"
+                class="w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJ4aPps2xSUdHO9_SF_Zhm90O0A324UnvNo1XYUkoUY76CqaXVaslAeoo0Kmqsiaor3eUQmRZeh8Hlw4UETjJBYgyWJ_P_ksX6MJS3CH_-gNGdR9vkja7QusG_6K7ZkyHNxXf1tYASHfDlDDBvdBZvOfm0xeMakOENjGA9GtTGBSSGG32FFLR2hwGNI83UHeHB4sks1j--DCRI9wrOKeCYhxgQODCrH0xR_ouIi6otQgSSJzBE7yn0bG0KkvijoiQOWDueICONQ0uN"
+              />
+            </div>
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"
+            ></div>
+            <div class="absolute bottom-0 left-0 p-6 space-y-2">
+              <span
+                class="bg-green-600/20 text-green-400 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-green-500/30"
+                >Nature Guardian</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                The Fairy Queen
+              </h3>
+              <div class="flex gap-4 mt-3 mb-1">
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-green-400 text-lg drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]"
+                    >local_florist</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-green-400/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Heal</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Chronos Blast
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Deals magic damage and slows the target's next turn.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Divine Smite
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A powerful melee strike that deals extra damage to undead.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Shadow Strike
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Attack from stealth for a guaranteed critical hit.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Floral Heal
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      A potent heal that restores a large amount of HP.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-green-400 text-lg drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]"
+                    >air</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-green-400/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Gale</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Aether Shield
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Creates a protective barrier that absorbs incoming spells.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Bastion of Light
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Heals nearby allies and grants them a defense boost.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Toxic Blade
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Applies a poison effect that deals damage over time.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Gale Winds
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Pushes back all enemies in a wide radius.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center group/skill relative">
+                  <span
+                    class="material-symbols-outlined text-green-400 text-lg drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]"
+                    >potted_plant</span
+                  >
+                  <span
+                    class="text-[8px] uppercase font-bold text-green-400/70 mt-1 opacity-0 group-hover/skill:opacity-100 transition-opacity"
+                    >Wrath</span
+                  >
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-primary"
+                    >
+                      Space Warp
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Teleport to any adjacent tile on the board.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-accent-gold"
+                    >
+                      Iron Resolve
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Becomes immune to crowd control effects for 2 turns.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-slate-300"
+                    >
+                      Smoke Screen
+                    </p>
+                    <p class="text-slate-400 text-[9px] leading-tight">
+                      Vanishes from sight, making the hero untargetable.
+                    </p>
+                  </div>
+                  <div class="skill-tooltip">
+                    <p
+                      class="text-white font-bold text-[10px] uppercase mb-1 text-green-400"
+                    >
+                      Nature's Wrath
+                    </p>
+                    <p class="text-slate-300 text-[9px] leading-tight">
+                      Summons roots to entangle and stun all nearby foes.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <p class="text-slate-300 text-xs">
+                Commands the forest. Heals allies with aetheric light.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Roadmap Section -->
+      <!-- The Grand Board Section -->
+      <section class="bg-base-100 py-24 px-6 lg:px-40 relative overflow-hidden">
+        <div
+          class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none"
+        ></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+          <div class="text-center mb-16 space-y-4">
+            <span
+              class="text-primary font-black uppercase tracking-[0.3em] text-sm"
+              >The Battlefield</span
+            >
+            <h2
+              class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter"
+            >
+              The Grand Board
+            </h2>
+            <div
+              class="h-1.5 w-32 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
+            ></div>
+          </div>
+          <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div class="relative group">
+              <div
+                class="absolute -inset-4 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all duration-1000"
+              ></div>
+              <img
+                alt="Isometric 3D fantasy board game map"
+                class="relative rounded-3xl gold-border shadow-2xl transform transition duration-500 hover:scale-[1.02]"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnEnLHOw2yMLHI7GAhiYzys79beQm0DrR5Vfuk0o0nYbkQSQ5e4vdSu7OK4KRMtsPbRYa7LPBmjyFdQl_2Gg45Fu9KIXZsO8QL_40BJJ_F-hnXzBq49sHl5EOvHZ-M0ULRHKEXj2bR3lCIWKlWirvWUfjoajs2wRXwLsuYb0cxahKWNc1ifk1tn01QGMUM76oM8eVXSgNLjHUfO3EYSuqo2Bh5cQoeZLYIuOpd7cjZ6g4YDqH0LZMeyAGNCdKEhFnaqc5yN2g7Jvqc"
+              />
+            </div>
+            <div class="space-y-8">
+              <div class="space-y-4">
+                <h3
+                  class="text-2xl font-bold text-accent-gold uppercase italic"
+                >
+                  Arcane Top-Down View
+                </h3>
+                <p class="text-slate-400 text-lg leading-relaxed">
+                  Command the realm from a divine perspective. Our isometric 3D
+                  map offers a total strategic overview of the shattered
+                  floating islands, where every move is calculated and every
+                  tile is a gamble.
+                </p>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-2xl">🎲</span>
+                    <span
+                      class="text-white font-bold uppercase text-sm tracking-widest"
+                      >Dice</span
+                    >
+                  </div>
+                  <p class="text-slate-400 text-xs">
+                    Pure luck meets destiny. Roll to navigate the 60 golden
+                    squares.
+                  </p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-2xl">🃏</span>
+                    <span
+                      class="text-white font-bold uppercase text-sm tracking-widest"
+                      >Cards</span
+                    >
+                  </div>
+                  <p class="text-slate-400 text-xs">
+                    Wield powerful arcane spells and tactical maneuvers from
+                    your deck.
+                  </p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-2xl">❓</span>
+                    <span
+                      class="text-white font-bold uppercase text-sm tracking-widest"
+                      >Mystery</span
+                    >
+                  </div>
+                  <p class="text-slate-400 text-xs">
+                    Question tiles trigger random world events and hidden traps.
+                  </p>
+                </div>
+                <div class="bg-white/5 p-4 rounded-xl border border-white/10">
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-2xl">⚔️</span>
+                    <span
+                      class="text-white font-bold uppercase text-sm tracking-widest"
+                      >Combat</span
+                    >
+                  </div>
+                  <p class="text-slate-400 text-xs">
+                    Engage in turn-based duels when paths cross on the
+                    battlefield.
+                  </p>
+                </div>
+                <div
+                  class="bg-white/5 p-4 rounded-xl border border-white/10 md:col-span-2"
+                >
+                  <div class="flex items-center gap-3 mb-2">
+                    <span class="text-2xl">💎</span>
+                    <span
+                      class="text-white font-bold uppercase text-sm tracking-widest"
+                      >Aether Gems</span
+                    >
+                  </div>
+                  <p class="text-slate-400 text-xs">
+                    Collect rare gems to power up your champion's ultimate
+                    abilities.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Detail View -->
+          <div
+            class="mt-24 bg-gradient-to-r from-accent-purple/30 to-background-dark rounded-3xl overflow-hidden border border-white/5"
+          >
+            <div class="flex flex-col md:flex-row items-center">
+              <div class="md:w-1/3 p-10 space-y-4">
+                <h4 class="text-xl font-black text-white uppercase italic">
+                  The Golden Path
+                </h4>
+                <p class="text-slate-400 text-sm">
+                  A circular journey through eternity. Navigate 60 numbered
+                  golden squares, each meticulously crafted to react to your
+                  presence and magic.
+                </p>
+              </div>
+              <div class="md:w-2/3">
+                <img
+                  alt="Close-up of the game board squares"
+                  class="w-full h-64 object-cover opacity-80 hover:opacity-100 transition-opacity"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaqHDE5yZ1rxjSSYYu5y6W-AM7cIdg36BUNn1Fd0OOqszCIBkklwO3GvqBAG7LuEe8n5ekvjRNKp6Kbxl8wVHKxONg4asPjUtmHJ8s6LgQ-PEsYw0la8ZbYD1_bs-Qf3cYn-uFsvU_ZkoVDlT2Vm-wPuiDz2f9oqtjcE5eI4uZMOb1n6ofhNDPZaNSontaz3Jb4ZSJSg2Zhkd5BwRuN_79xdE7NTyGU_0gAfrjKrnmz2y51I3DpCCfP1Dlm7BFZCIJFUivCk25JjhC"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="bg-base-100 py-24 px-6 lg:px-40 relative overflow-hidden border-t border-white/5"
+      >
+        <div
+          class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-accent-purple/5 blur-[120px] rounded-full pointer-events-none"
+        ></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+          <div class="text-center mb-16 space-y-4">
+            <span
+              class="text-primary font-black uppercase tracking-[0.3em] text-sm"
+              >Tutorial</span
+            >
+            <h2
+              class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter"
+            >
+              Master the Realm: How to Play
+            </h2>
+            <div
+              class="h-1.5 w-32 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
+            ></div>
+            <p class="text-slate-400 max-w-2xl mx-auto mt-6 text-lg">
+              Learn the rules of the Aether. From summoning ancient spirits to
+              manipulating the very tiles you stand on, discover the depth of
+              our immersive VR tabletop experience.
+            </p>
+          </div>
+          <div class="relative max-w-5xl mx-auto group">
+            <!-- Video Player Placeholder -->
+            <div
+              class="relative aspect-video rounded-3xl overflow-hidden gold-border shadow-[0_0_50px_rgba(0,0,0,0.5)]"
+            >
+              <img
+                alt="How to Play Background"
+                class="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-1000 opacity-60"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWtNdlzdu4y2a7gOgCYxXSkwJqT8otvLx58ENkk1pcZ2qdsP5CjxMYDn9vZRHdrrmhHZWIrdMaMB6vTkw5MS_zK7TQfcxcw1PlEy0TMgrskIC7TOadz8pjehq8I4cB7hFCXX5rs-PhHOAxXZCrNO9alCFKm_kakIwbZ4nImrz9IKhW_Syk-928Pm_oqJWTyaNEN9ODBIF18ihjY-IapG6uoNeNWvS0KTeu2uzI9x17-b6pfGZpmcyPAKEmnZfK6ufzW1v4fGuUBuse"
+              />
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-background-dark/40"
+              ></div>
+              <!-- Play Button Overlay -->
+              <div class="absolute inset-0 flex items-center justify-center">
+                <button class="relative flex items-center justify-center">
+                  <span
+                    class="absolute inset-0 bg-primary/30 rounded-full animate-ping"
+                  ></span>
+                  <div
+                    class="relative w-24 h-24 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl transform transition-transform group-hover:scale-110"
+                  >
+                    <span class="material-symbols-outlined text-5xl ml-2"
+                      >play_arrow</span
+                    >
+                  </div>
+                </button>
+              </div>
+              <!-- Video Info Bottom Bar -->
+              <div
+                class="absolute bottom-0 left-0 right-0 p-8 flex justify-between items-end backdrop-blur-sm bg-black/20"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 rounded-full border border-primary/50 flex items-center justify-center bg-base-100/50"
+                  >
+                    <span class="material-symbols-outlined text-primary"
+                      >videocam</span
+                    >
+                  </div>
+                  <div>
+                    <p
+                      class="text-white font-bold uppercase tracking-widest text-sm"
+                    >
+                      Quick Start Guide
+                    </p>
+                    <p class="text-slate-400 text-xs uppercase">
+                      4:20 • Cinematic Tutorial
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-4">
+                  <span
+                    class="material-symbols-outlined text-white/50 hover:text-white cursor-pointer transition-colors"
+                    >subtitles</span
+                  >
+                  <span
+                    class="material-symbols-outlined text-white/50 hover:text-white cursor-pointer transition-colors"
+                    >fullscreen</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Decorative Elements -->
+            <div
+              class="absolute -top-6 -left-6 w-32 h-32 border-t-2 border-l-2 border-primary/30 rounded-tl-3xl"
+            ></div>
+            <div
+              class="absolute -bottom-6 -right-6 w-32 h-32 border-b-2 border-r-2 border-primary/30 rounded-br-3xl"
+            ></div>
+          </div>
+          <div class="grid md:grid-cols-3 gap-8 mt-16">
+            <div class="text-center space-y-2">
+              <h5 class="text-accent-gold font-black uppercase text-sm italic">
+                01. Choose Hero
+              </h5>
+              <p class="text-slate-500 text-xs">
+                Select from 12 unique legends with distinct VR abilities.
+              </p>
+            </div>
+            <div class="text-center space-y-2">
+              <h5 class="text-accent-gold font-black uppercase text-sm italic">
+                02. Roll &amp; Move
+              </h5>
+              <p class="text-slate-500 text-xs">
+                Navigate the 60 golden squares using physical VR dice rolls.
+              </p>
+            </div>
+            <div class="text-center space-y-2">
+              <h5 class="text-accent-gold font-black uppercase text-sm italic">
+                03. Arcane Combat
+              </h5>
+              <p class="text-slate-500 text-xs">
+                Cast spells by drawing runes in the air with your controllers.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="bg-base-100 py-24 px-6 lg:px-40 relative overflow-hidden">
+        <div
+          class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-primary/5 blur-[150px] rounded-full pointer-events-none"
+        ></div>
+        <div class="text-center mb-16 space-y-4">
+          <span
+            class="text-primary font-black uppercase tracking-[0.3em] text-sm"
+            >Discovery</span
+          >
+          <h2
+            class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter"
+          >
+            The Four Biomes
+          </h2>
+          <div
+            class="h-1.5 w-32 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
+          ></div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+          <!-- Forest Biome -->
+          <div
+            class="group bg-white/5 rounded-3xl p-8 border border-green-500/20 hover:border-green-500/50 transition-all duration-500"
+          >
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-green-400"
+                >forest</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                Emerald Forest
+              </h3>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <img
+                alt="Wise Oak"
+                class="w-full aspect-square object-cover rounded-xl col-span-2"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg5mpnWkOpStOvfdvaX6l0MoVTGGOXj4D5dPFj37KsOlwwWYAZ996pPsAoXA4LJTl9uksi5jRgIbgdwhLYypF0nHkZuDQlctFS6V5CSkVYx3JrINvgQs6LkbTT1cZrPebnBobIYJIhD9j54gd3nb4mGDqwBKdpKKNDF8rrFlvVjvoi1j0o6ICIEx3UKrcPUfF8fVztx6P6Ze2rOxeAJ1I7BCGnOPMbdeE1T6GsBKyFXkk8NblwWHe9RVFXilsIgcv41yu-Ql7Sk27I"
+              />
+              <img
+                alt="Vine Bridge"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAX-MRp_nJQs6tDr6BqXBjA2MgrT2Un3W2j7Gb_spEhcjigHKaQingV_lol6Ku1MFNkhC1gF6ed6bRqaREwNX-g9rdgiyUGziyGhLiFrrj8w3ujOrKlE6ikf1ScHVa1zvlqrzkN3ZvsVBsWiYYghrV3ZYF2xPMqSzlkcNBVSYebg9d8sfaHG_8dsiu5sAoJ9izZ2vYKALOGTmKCO7F7k_mjia6OYsJrV-SdkqYT_7SYI61E8tM4hPPTShV7brnhnSeXRhN92Lbl3OwA"
+              />
+              <img
+                alt="Mushroom Houses"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeZ3y2nHqoyCr712pfVCnz3mKWjhehE9uCSEhnGYE7YGBb7emHmmtRGa2tmzm7Bx_nyCGuPZZtsdQb8BahrGlBwIHK6H1h05_1e1XwcOVWKgYPJb98eTBAsx4Xo7mRFP7KAfMxG_fWkiLJS_yp4bHCAEB43hPtX-dUssqxwpy9guOe9XHw5h-I3fuxXwv9MdemwZMYiiCG71qirHFh0YjmJi1SYb021mCmGNRvZo-G8hjBZGvgTOAqAUNV_tq-TdbvF0dkPJZoITBU"
+              />
+            </div>
+          </div>
+          <!-- Desert Biome -->
+          <div
+            class="group bg-white/5 rounded-3xl p-8 border border-orange-500/20 hover:border-orange-500/50 transition-all duration-500"
+          >
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-orange-400"
+                >wb_sunny</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                Golden Sands
+              </h3>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <img
+                alt="Glowing Pyramid"
+                class="w-full aspect-square object-cover rounded-xl col-span-2"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDC1dhSNk37NUiWlZh1ZXth_L_v6GXwIWGfk36S7CndPw6PXXsF87amqSJZJzFbB1_1p6s6T9CI2ZFglAH7xpJrKuF1YyCIlJzcvCXqOzMB4oHLRxn9Ov7ElJzDBxOSbEU0JN_pvwFl3uqmuaUNVv0dM6y1stvoARnIhBAiZTVcfSbzCckn--NNlGOsFWp_yyjViLUSknuBLk5cVIWjR2_4CzdfW0OJj0Z2elnyzhRQaYbGGzZ9P3l6o41XHRuhfLskojEk69DFnrS8"
+              />
+              <img
+                alt="Oasis"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT5gsa98L1f30anIpSPV52jHkV3PJO4MkWYGAhTiKcj4BIPEqPXCSPCR0f-9345zUY_t8w7iXbUMePgsf6KG8gCgr94Dnpq9s7N9Tb1Zz05Cuqc5_wuHIeINeM3LirQzHE-fbVcsrDeKt1geACPI2hEF3m1a6dy-KtZuKZ48svlUrlIasMfJblaykGSf7AzTHGopM-d-KyiCmX9rqEJNDsPSAFAvV1vKW-i0cOVfYo5zZqXglrmS1iMNhd_ZSv_i58G83U0fcCb7l-"
+              />
+              <img
+                alt="Sphinx"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKZaum6Z_-6tI_JOif5tsp2Mq-tgsAv-6TKuaESGiBkYzPfLLMxIWEl6FInFLf470AflHC40miEnIGPkU_qvRiQmXd77lAz6muVx7GI8tULgv4ZneJaRv8qX-MCctBVxv96xrP2_4ycILGcLAHaNgJFh733NlD6YCoHgOCVTPwxY8Bl6YNghEk2enR8r1uBuJIaT56h9Jtta3tHZ4DOL-XsRYwud8cdjmGsf3bJd8_NK94QfYtzghY95ODHM29p-Kw74m6R3QnjN3_"
+              />
+            </div>
+          </div>
+          <!-- Ice Biome -->
+          <div
+            class="group bg-white/5 rounded-3xl p-8 border border-cyan-500/20 hover:border-cyan-500/50 transition-all duration-500"
+          >
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-cyan-400"
+                >ac_unit</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                Frozen Reach
+              </h3>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <img
+                alt="Igloos"
+                class="w-full aspect-square object-cover rounded-xl col-span-2"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeoOEAwsyrQ2VvSzi-4mI6JfyC1HNX2CO31boFMx8mzwfBNu9v9IVJOKCoKgvmOkGSpGMM_ptYgWxwWo-VMtxRf8xlkVKJxxv23gjDQEVbenIupFxcytVEF-lpeawMz6k1zQKBNS-5hvS6nI0u47W_wojqa9vffDGXFb6c5r6P0PAKzy-W8HYBf1h4qEAhmAbUzbmJEDBM3EzztdrSbaEt44bPBUuwh___KlMUpvSXiq2me1J4j8jiNl7qGM2tkTi_AkEU9ZaB9AMj"
+              />
+              <img
+                alt="Ice Bridge"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf2ej-uKnqvclg8axma_pAMWr56cXJl7NNvzvCSRqAC2SqbKobtQDloznYKjbiNCUo8G_xe3HiAEaB9ZGnJ4fsI4HKazPL0Zd_xVMC-u2Q8_AhowdDy0s3IdhB61TcI-6azGbFtRo4-5G8jaWnPF6c_5vIrpYGwFoYUHYaxAX04JMjcjPJsMFJ4Cypg6ReBLkZFsoHlyjsjGIS_xrI6s6ElG5eSnOVH8YsGqz4G8BX4cQPXUzsnK-bCGAAIti1YWRuffqVFwH6_Rou"
+              />
+              <img
+                alt="Snow Crystals"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBau64nKi-msoUfl_47mBKT1ApWiHuGRpiSGNtNi0XZ7ClSIH4TjKfmvZC-n5_BFuQCYNMvgtQRsrh4AwoA2gb_H5t5jevg8I1Kh-5M3EWuq8XwUhGtPRoMvVb07iDLNY4tWiSZpDTRa8fEXvCNXzGsyhPGTAjPzznZm6vVpuIlao4XUltqSqXMXyWV70Rn-PYknZdF_zQMptQ51oNpmwQgZz64EBtH2x8PTC0RbOh-MrsSkHxjRemJ0-5ZlSP55d_bH9CNiH_7sp0"
+              />
+            </div>
+          </div>
+          <!-- Volcano Biome -->
+          <div
+            class="group bg-white/5 rounded-3xl p-8 border border-red-500/20 hover:border-red-500/50 transition-all duration-500"
+          >
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-red-500"
+                >volcano</span
+              >
+              <h3 class="text-2xl font-black text-white uppercase italic">
+                Molten Core
+              </h3>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <img
+                alt="Blacksmith Forge"
+                class="w-full aspect-square object-cover rounded-xl col-span-2"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0TVt5T8qJTRLcf75OixkAF_QB3gKf5uCVgXMYZtfyNO-imi8-4mnUsvuQGrdCl4-Zy1NgAlPBMWQ55gO_WTAsXoeQAXwSQQ9gGGgMbtrFJDLTdbzbAXQv3RHw8ZGQExg7ZjHd6HA4MUCTjG62IRA8-ufGxoPfW_AAoP0Mfqm6yoVkbJqS_L2lLM3zXAH4-gTIoWmwnZQMR3h-4fGCIMt0RcPaE0kuZ7OfVZQMyT2SFI_j_tkLPLbG4QGFu3bnhBezEF2EJLODXUWi"
+              />
+              <img
+                alt="Lava Bridge"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyP-KeQwV5XgVr0ju2sM43NlLmyC1L32ilRArevazzXTrxfMw8qn8rhLX4M1Y5qeQtkF62FTPYv_y6yVrgfq1yG92agIlYDv45W546VBho5Vcf2vhh8y-PYm3q8gvFi3SXOYTNlFjPQvTG0y3JzvgKgKd-AC5Hok_DrKBEfPEtd_VobCZix55XMmQNJQmyzOpuKIdGKsSyZ0sxRmEfhKX1Xo0-HP3_z7kpDyWh00NR36LC8T6TvG769h8XBU6qi-3NU0AoRtHgPMHL"
+              />
+              <img
+                alt="Fire Temple"
+                class="w-full aspect-square object-cover rounded-xl"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJpa5G_P57gVv2zL5eQt4oyuUmYVeup5HD8DLN8VZAGepf3DCAIhRc_BTrkvxFWfQ4BN_T0WGtNScgGtwOiFQ6R1VcuXunb29jghqGQ9YVVSR4S3S-WM7imtvRvDEerazDAMsOy1v9JDHAk20yuUEuwR2wkjLiAjaSPMoOg1nRKo3zBpmrM9HYSe8QZRHZzJJ-KV3xlg2_X6GqYYCTz0xD5hYh5TtPfu2E2OnS33gtJQK0etSksvJFX9fr9GBmNAhYTu8GgS7ayqNX"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="bg-[#12080e] py-24 px-6 lg:px-40 relative">
+        <div class="max-w-6xl mx-auto">
+          <div
+            class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+          >
+            <div class="space-y-4">
+              <span
+                class="text-primary font-black uppercase tracking-[0.3em] text-sm"
+                >Development</span
+              >
+              <h2
+                class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter"
+              >
+                The Roadmap
+              </h2>
+            </div>
+            <p class="text-slate-400 max-w-sm">
+              The journey across the Aether Realms is just beginning. See what's
+              coming to your headset.
+            </p>
+          </div>
+          <div class="grid lg:grid-cols-2 gap-12">
+            <!-- Roadmap Item 1 -->
+            <div
+              class="bg-accent-purple/20 rounded-2xl overflow-hidden border border-white/5 flex flex-col md:flex-row"
+            >
+              <div class="md:w-1/2 aspect-square md:aspect-auto">
+                <img
+                  alt="The Emerald Forest"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-GdBLSFlb6lyn7LKm8OC-L9R0NzuzjAelQ7fBtEk0N6JT6oDCSCFzOqzTqFXnYJcVHXRGG-UMGf--lcCo1BqjKCK4XVcxRZdUsVnK4c0tC_KrADGccskTOqhznHhBqnW75n-t4iwerz1BqeHxSKH4xJuJ8TQUnRfhW4tZuN7HGvg8fZF-K951hDIHMeHSfyAeX0FQUfD3PWzsm4qtjtLCwnG7RhbyiqsBC-_SflF84XnOsU2aQUq6sFVkAfTqjOU787Putdc7Eawz"
+                />
+              </div>
+              <div class="md:w-1/2 p-8 flex flex-col justify-center space-y-4">
+                <div
+                  class="text-primary font-black text-xs uppercase tracking-widest"
+                >
+                  Phase 01 | Q3 2024
+                </div>
+                <h4 class="text-2xl font-bold text-white uppercase italic">
+                  The Emerald Forest
+                </h4>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                  Exploration of the ancient woods. Uncover the secrets of the
+                  Wise Oak and master nature-based magic.
+                </p>
+              </div>
+            </div>
+            <!-- Roadmap Item 2 -->
+            <div
+              class="bg-accent-purple/20 rounded-2xl overflow-hidden border border-white/5 flex flex-col md:flex-row"
+            >
+              <div
+                class="md:w-1/2 p-8 flex flex-col justify-center space-y-4 order-2 md:order-1"
+              >
+                <div
+                  class="text-primary font-black text-xs uppercase tracking-widest"
+                >
+                  Phase 02 | Q1 2025
+                </div>
+                <h4 class="text-2xl font-bold text-white uppercase italic">
+                  Golden Sands
+                </h4>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                  Venture into the desert realms. Discover the secrets of the
+                  glowing pyramids and the Sands of Time mechanic.
+                </p>
+              </div>
+              <div
+                class="md:w-1/2 aspect-square md:aspect-auto order-1 md:order-2"
+              >
+                <img
+                  alt="Golden Sands"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBltp9X1vdzgjtJ82TZLvbn2O38xhx7oDT9FOoomhzcuPfaQFPMmJgtwfEjkcP1SkLgdykUCoTXk5K4Or-H94SQLLx7kQlHx1bTwCouLmQ5_j8t2B9tdmapV7rBTQpTmeUtkqX8IgIZGQ56BZdIz9hgTQd61PaA_0IEaib-gOZrKeEyOQv8JxPCX0slbBmZrP5NL7gjupvzKFpXgS_wx2lg-N3hOC3-MOV7eGIjXEulJ2S0oBHuYuHWXsFmk726-Hk6aPLeqzZK9-Ba"
+                />
+              </div>
+            </div>
+            <!-- Roadmap Item 3 -->
+            <div
+              class="bg-accent-purple/20 rounded-2xl overflow-hidden border border-white/5 flex flex-col md:flex-row"
+            >
+              <div class="md:w-1/2 aspect-square md:aspect-auto">
+                <img
+                  alt="Frozen Reach"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3be7jlDrB-z26Plfy0TMMyqHzoSYu9KzEFg1OTUGcF9q4jHv3vR2TU0WPqQ-mz3KcvwqdwmHsmEOu9nA4v26RlwmQwFh5LfTRWe0MgdmvY7OUEuVUhc7fgGdSllpAAoto9prvcoxBcv4SHqMLwm7Oo-RkivpIOmpPSKDC9yQzDWIr5B8GPCRrSSMpYJ8JCHkeAD0qHVm9CvZXUWy1t15jKpvrfbULNwEFxS-EmgtL8iKfoR-Bd88UOpNEikf5mMFQmG4yM9SLXMTM"
+                />
+              </div>
+              <div class="md:w-1/2 p-8 flex flex-col justify-center space-y-4">
+                <div
+                  class="text-primary font-black text-xs uppercase tracking-widest"
+                >
+                  Phase 03 | Q3 2025
+                </div>
+                <h4 class="text-2xl font-bold text-white uppercase italic">
+                  Frozen Reach
+                </h4>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                  Face the trials of the eternal winter. Navigate the ice
+                  bridges and harness the power of ancient crystals.
+                </p>
+              </div>
+            </div>
+            <!-- Roadmap Item 4 -->
+            <div
+              class="bg-accent-purple/20 rounded-2xl overflow-hidden border border-white/5 flex flex-col md:flex-row"
+            >
+              <div
+                class="md:w-1/2 p-8 flex flex-col justify-center space-y-4 order-2 md:order-1"
+              >
+                <div
+                  class="text-primary font-black text-xs uppercase tracking-widest"
+                >
+                  Phase 04 | Q1 2026
+                </div>
+                <h4 class="text-2xl font-bold text-white uppercase italic">
+                  Molten Core
+                </h4>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                  Master the volcanic depths. Forge ultimate weapons in the
+                  Molten Core and conquer the Fire Temple.
+                </p>
+              </div>
+              <div
+                class="md:w-1/2 aspect-square md:aspect-auto order-1 md:order-2"
+              >
+                <img
+                  alt="Molten Core"
+                  class="w-full h-full object-cover"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs4qlk8hrjLFfDlLYxoW-9P_8sUHQVZqiPw95q3FE44h_mJkSMJ278-4KhXKy6ZiKcuORjQAL-cJUntzEri1pudWJCsxn8B3_kv4f7yVTMZs3EHYuEv4Mbq_6e-RLUctKcJzlO40s6C3agK4Slja0ZmzTkkwjKrivsT7iCiXEPf6MYSou1paIHOD4y7FrbmXio-ToP6AYdKGnb3DigyHVoYF7hX2WAwTsepTZfCGfq0zZX5v_OJ0pKuXxaLyxvWfRgycud56hBqq-o"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- CTA Footer -->
+      <section
+        class="bg-[#12080e] py-24 px-6 lg:px-40 relative overflow-hidden border-t border-white/5"
+      >
+        <div
+          class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 bg-primary/5 blur-[120px] rounded-full pointer-events-none"
+        ></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+          <div class="text-center mb-16 space-y-4">
+            <span
+              class="text-primary font-black uppercase tracking-[0.3em] text-sm"
+              >Stay Connected</span
+            >
+            <h2
+              class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter"
+            >
+              Join the Community
+            </h2>
+            <div
+              class="h-1.5 w-32 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
+            ></div>
+          </div>
+          <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Discord Feed Placeholder -->
+            <div
+              class="bg-[#1a0b14] border border-white/5 rounded-3xl overflow-hidden shadow-2xl group hover:border-primary/30 transition-all"
+            >
+              <div
+                class="bg-[#5865F2]/10 p-6 flex items-center justify-between border-b border-white/5"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 bg-[#5865F2] rounded-2xl flex items-center justify-center shadow-lg shadow-[#5865F2]/20"
+                  >
+                    <svg class="w-7 h-7 fill-white" viewbox="0 0 24 24">
+                      <path
+                        d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.23 10.23 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.419 0 1.334-.947 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.419 0 1.334-.946 2.419-2.157 2.419z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-white font-bold uppercase tracking-widest text-sm"
+                    >
+                      Aether Discord
+                    </h4>
+                    <p
+                      class="text-green-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5"
+                    >
+                      <span
+                        class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"
+                      ></span>
+                      1,420 Online Now
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="bg-[#5865F2] hover:bg-[#5865F2]/90 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                >
+                  Join Server
+                </button>
+              </div>
+              <div class="p-6 space-y-4 opacity-80">
+                <div class="flex gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-primary/20 flex-shrink-0"
+                  ></div>
+                  <div class="space-y-1">
+                    <p class="text-primary text-[10px] font-bold">
+                      HighTactician_42
+                    </p>
+                    <p class="text-slate-400 text-xs">
+                      Just unlocked the Fire Temple! Those runes are tricky.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-accent-gold/20 flex-shrink-0"
+                  ></div>
+                  <div class="space-y-1">
+                    <p class="text-accent-gold text-[10px] font-bold">
+                      Aether_Mod
+                    </p>
+                    <p class="text-slate-400 text-xs">
+                      Next community tournament starts in 2 hours. Get ready!
+                    </p>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <div
+                    class="w-8 h-8 rounded-full bg-blue-500/20 flex-shrink-0"
+                  ></div>
+                  <div class="space-y-1">
+                    <p class="text-blue-400 text-[10px] font-bold">VRPioneer</p>
+                    <p class="text-slate-400 text-xs">
+                      The immersion in the Emerald Forest is insane. Check out
+                      these screenshots.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Twitter Feed Placeholder -->
+            <div
+              class="bg-[#1a0b14] border border-white/5 rounded-3xl overflow-hidden shadow-2xl group hover:border-primary/30 transition-all"
+            >
+              <div
+                class="bg-black/40 p-6 flex items-center justify-between border-b border-white/5"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg shadow-white/5"
+                  >
+                    <svg class="w-6 h-6 fill-black" viewbox="0 0 24 24">
+                      <path
+                        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                      ></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <h4
+                      class="text-white font-bold uppercase tracking-widest text-sm"
+                    >
+                      Latest Updates
+                    </h4>
+                    <p
+                      class="text-slate-500 text-[10px] font-black uppercase tracking-widest"
+                    >
+                      @AetherRealmsVR
+                    </p>
+                  </div>
+                </div>
+                <button
+                  class="bg-white text-black hover:bg-white/90 px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all"
+                >
+                  Follow Us
+                </button>
+              </div>
+              <div class="p-6 space-y-6">
+                <div class="space-y-2">
+                  <p class="text-slate-300 text-sm leading-relaxed">
+                    The 'Sands of Time' update is almost here! ⏳ Prepare to
+                    manipulate reality in the Golden Sands biome.
+                    <span class="text-primary">#AetherRealms #VRGaming</span>
+                  </p>
+                  <p
+                    class="text-slate-500 text-[10px] uppercase tracking-widest"
+                  >
+                    2 hours ago
+                  </p>
+                </div>
+                <div class="h-[1px] bg-white/5 w-full"></div>
+                <div class="space-y-2">
+                  <p class="text-slate-300 text-sm leading-relaxed">
+                    Dev Log #12: Exploring the mechanics of Arcane Runes in VR.
+                    Full video on our YouTube channel. 📽️
+                  </p>
+                  <p
+                    class="text-slate-500 text-[10px] uppercase tracking-widest"
+                  >
+                    Yesterday
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section
+        class="bg-base-100 py-24 px-6 lg:px-40 relative overflow-hidden border-t border-white/5"
+      >
+        <div
+          class="absolute top-0 right-1/4 w-96 h-96 bg-primary/5 blur-[120px] rounded-full pointer-events-none"
+        ></div>
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+          <div class="space-y-4 mb-12">
+            <span
+              class="text-primary font-black uppercase tracking-[0.3em] text-sm"
+              >Newsletter</span
+            >
+            <h2
+              class="text-4xl md:text-6xl font-black text-white uppercase italic tracking-tighter"
+            >
+              Never Miss An Update
+            </h2>
+            <div
+              class="h-1.5 w-32 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto"
+            ></div>
+            <p class="text-slate-400 text-lg max-w-2xl mx-auto mt-6">
+              Subscribe to our newsletter for the latest news, exclusive
+              content, and early access to new biomes.
+            </p>
+          </div>
+          <form
+            class="relative max-w-xl mx-auto group"
+            onsubmit="return false;"
+          >
+            <div
+              class="flex flex-col sm:flex-row gap-4 p-2 bg-white/5 backdrop-blur-md rounded-2xl gold-border"
+            >
+              <input
+                class="flex-1 bg-transparent border-none text-white placeholder-slate-500 focus:ring-0 px-6 py-4 text-lg font-medium"
+                placeholder="Enter your arcane mail..."
+                required=""
+                type="email"
+              />
+              <button
+                class="bg-primary hover:bg-primary/90 text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-primary/20"
+                type="submit"
+              >
+                Subscribe
+              </button>
+            </div>
+            <div
+              class="mt-4 flex items-center justify-center gap-2 text-slate-500 text-[10px] uppercase tracking-widest"
+            >
+              <span class="material-symbols-outlined text-xs"
+                >verified_user</span
+              >
+              No spam, just pure magic. Unsubscribe anytime.
+            </div>
+          </form>
+        </div>
+      </section>
+      <footer class="bg-[#0a0508] border-t border-white/10 py-12 px-6 lg:px-40">
+        <div
+          class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8"
+        >
+          <!-- Brand Section -->
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-2xl"
+              >deployed_code</span
+            >
+            <h2
+              class="text-white text-xl font-black uppercase italic tracking-tighter"
+            >
+              Aether Realms
+            </h2>
+          </div>
+          <!-- Middle Section: Copyright & Legal -->
+          <div class="flex flex-col items-center gap-4">
+            <div
+              class="text-slate-500 text-[10px] md:text-xs uppercase tracking-[0.2em] font-medium"
+            >
+              © 2024 Aetheric Studios. All Rights Reserved.
+            </div>
+            <nav class="flex gap-6">
+              <a
+                class="text-slate-400 text-xs uppercase tracking-widest transition-colors font-bold hover:text-[#ff7a30] hover:underline hover:brightness-125 transition-all"
+                href="#"
+                >Privacy</a
+              >
+              <a
+                class="text-slate-400 text-xs uppercase tracking-widest transition-colors font-bold hover:text-[#ff7a30] hover:underline hover:brightness-125 transition-all"
+                href="#"
+                >Terms</a
+              >
+              <a
+                class="text-slate-400 text-xs uppercase tracking-widest transition-colors font-bold hover:text-[#ff7a30] hover:underline hover:brightness-125 transition-all"
+                href="#"
+                >Support</a
+              >
+            </nav>
+          </div>
+          <!-- Social Section -->
+          <div class="flex items-center gap-6">
+            <a
+              class="group p-3 rounded-full bg-white/5 text-slate-400 hover:text-primary transition-all hover:bg-white/10 hover:brightness-125"
+              href="#"
+            >
+              <svg class="w-7 h-7 fill-current" viewbox="0 0 24 24">
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                ></path>
+              </svg>
+            </a>
+            <a
+              class="group p-3 rounded-full bg-white/5 text-slate-400 hover:text-primary transition-all hover:bg-white/10 hover:brightness-125"
+              href="#"
+            >
+              <svg class="w-7 h-7 fill-current" viewbox="0 0 24 24">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                ></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

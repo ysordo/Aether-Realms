@@ -1,0 +1,289 @@
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap");
+@import "tailwindcss";
+
+/* ============================================
+   AETHER REALMS - DESIGN TOKENS
+   CSS Variables that change with theme class
+   ============================================ */
+
+/* Light mode (default CSS variables) */
+:root {
+  /* Base color tokens - Light mode default */
+  --color-base-100: #f8f6f6;
+  --color-base-200: #e5e5e5;
+  --color-base-300: #d4d4d4;
+  --color-base-content: #1a0b14;
+
+  /* Primary/Accent colors */
+  --color-primary: #ec5b13;
+  --color-accent-gold: #d4af37;
+  --color-accent-purple: #4b2038;
+
+  /* Semantic colors */
+  --color-info: #3b82f6;
+  --color-info-content: #ffffff;
+  --color-success: #22c55e;
+  --color-success-content: #ffffff;
+  --color-warning: #d4af37;
+  --color-warning-content: #1a0b14;
+  --color-error: #ef4444;
+  --color-error-content: #ffffff;
+
+  /* Typography */
+  --font-family: "Public Sans", sans-serif;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-glow-primary: 0 0 25px rgba(236, 91, 19, 0.6);
+  --shadow-glow-gold: 0 0 20px rgba(212, 175, 55, 0.4);
+}
+
+input[type="range"].slider-track::-webkit-slider-thumb {
+  @apply appearance-none w-4 h-4 rounded-full bg-primary border-none cursor-pointer transition-transform;
+}
+input[type="range"].slider-track::-webkit-slider-thumb:hover {
+  @apply scale-110;
+}
+input[type="range"].slider-track::-moz-range-thumb {
+  @apply appearance-none w-4 h-4 rounded-full bg-primary border-none cursor-pointer transition-transform;
+}
+input[type="range"].slider-track::-moz-range-thumb:hover {
+  @apply scale-110;
+}
+
+/* Dark mode - Override CSS variables when .dark class is present */
+html.dark {
+  --color-base-100: #1a0b14;
+  --color-base-200: #2d1424;
+  --color-base-300: #4b2038;
+  --color-base-content: #f8f6f6;
+}
+
+/* ============================================
+   CUSTOM TAILWIND THEME
+   Maps Tailwind classes to CSS variables
+   ============================================ */
+
+@theme inline {
+  /* Typography */
+  --font-sans: var(--font-family);
+
+  /* Base color tokens - Using CSS variables */
+  --color-base-100: var(--color-base-100);
+  --color-base-200: var(--color-base-200);
+  --color-base-300: var(--color-base-300);
+  --color-base-content: var(--color-base-content);
+
+  /* Brand colors */
+  --color-primary: var(--color-primary);
+  --color-gold: var(--color-accent-gold);
+  --color-purple: var(--color-accent-purple);
+
+  /* Semantic colors */
+  --color-info: var(--color-info);
+  --color-info-content: var(--color-info-content);
+  --color-success: var(--color-success);
+  --color-success-content: var(--color-success-content);
+  --color-warning: var(--color-warning);
+  --color-warning-content: var(--color-warning-content);
+  --color-error: var(--color-error);
+  --color-error-content: var(--color-error-content);
+
+  /* Custom shadows */
+  --shadow-primary-glow: var(--shadow-glow-primary);
+  --shadow-gold-glow: var(--shadow-glow-gold);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-base-100);
+  color: var(--color-base-content);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* ============================================
+   UTILITY CLASSES (Matching code.html)
+   ============================================ */
+
+/* Text gradient from primary to gold */
+.text-gradient-aether {
+  background: linear-gradient(135deg, #ec5b13, #f97316, #d4af37);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Text glow effect - from code.html */
+.text-glow {
+  text-shadow: 0 0 15px rgba(236, 91, 19, 0.4);
+}
+
+.text-glow-strong {
+  text-shadow: 0 0 25px rgba(236, 91, 19, 0.6);
+}
+
+/* Gold border utility - from code.html */
+.gold-border {
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.gold-border-strong {
+  border: 2px solid rgba(212, 175, 55, 0.5);
+}
+
+/* Curve separator - from code.html */
+.curve-separator {
+  clip-path: ellipse(80% 100% at 50% 0%);
+}
+
+/* Heading hero style */
+.heading-hero {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  font-style: italic;
+  line-height: 1;
+}
+
+/* Card base styles */
+.card {
+  background-color: var(--color-base-100);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: var(--radius-xl);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: 0 0 30px rgba(236, 91, 19, 0.2);
+}
+
+/* Button primary - from code.html */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-full);
+  padding: 0.625rem 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 20px rgba(236, 91, 19, 0.4);
+}
+
+.btn-primary:hover {
+  background-color: rgba(236, 91, 19, 0.9);
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(236, 91, 19, 0.6);
+}
+
+/* Scroll indicator animation */
+@keyframes scroll-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+.scroll-indicator {
+  animation: scroll-bounce 1.5s infinite;
+}
+
+/* Fade in up animation - from code.html */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Stagger delays */
+.stagger-1 {
+  animation-delay: 100ms;
+}
+.stagger-2 {
+  animation-delay: 200ms;
+}
+.stagger-3 {
+  animation-delay: 300ms;
+}
+.stagger-4 {
+  animation-delay: 400ms;
+}
+
+/* Skill tooltip - from code.html */
+.skill-tooltip {
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(26, 11, 20, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(236, 91, 19, 0.3);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  width: 160px;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 100;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.5),
+    0 0 10px rgba(236, 91, 19, 0.2);
+}
+
+.group\/skill:hover .skill-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.skill-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: rgba(26, 11, 20, 0.95) transparent transparent transparent;
+}
