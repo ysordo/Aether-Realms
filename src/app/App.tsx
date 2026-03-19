@@ -11,6 +11,8 @@ import { AnimatePresence } from 'framer-motion'
 import { useEffect } from 'react'
 import { useAudio } from '@features/audio'
 
+const basename = import.meta.env.BASE_URL || '/'
+
 function AnimatedRoutes() {
   const location = useLocation()
   const { playBGM } = useAudio()
@@ -46,7 +48,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <ThemeProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={basename}>
         <div className="app min-h-screen w-full overflow-hidden flex flex-col">
           <ToastContainer />
           <AudioSettings />
